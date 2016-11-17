@@ -10,9 +10,9 @@ if __name__=='__main__':
   for l in f:
     i=i+1
     if (i>2):
-      data.append(map(float, l.split()))
+      data.append(list(map(float, l.split())))
 
-  print data
+  #print(data)
 
-  print PyChooch.calc(data, "Se", "K")
+  print(PyChooch.calc(data, "Se", "K"))
    

@@ -101,10 +101,21 @@ static PyObject* PyChooch_calc(PyObject *self, PyObject *args) {
 }
 
 
+
 static PyMethodDef PyChoochMethods[] = {
     {"calc",  PyChooch_calc, METH_VARARGS,
      "Input arguments: raw data from energy scan in the form ((X1, Y1), ..., (Xn, Yn)) then Element (e.g 'Se') and Edge (e.g 'K')\nOutput: (Epeak, fppPeak, fpPeak, Einfl, fppInfl, fpInfl, ((X1, Yspline1, Yfp1),...,(Xn, Ysplinen, Yfpn)) )" },
-    {NULL, NULL, 0, NULL}        /* Sentinel */
+    {NULL, NULL, 0, NULL}        // Sentinel 
+};
+
+
+// LNLS
+static struct PyModuleDef PyChooch = {
+    PyModuleDef_HEAD_INIT,
+    "PyChooch", /* name of module */
+    "Input arguments: raw data from energy scan in the form ((X1, Y1), ..., (Xn, Yn)) then Element (e.g 'Se') and Edge (e.g 'K')\nOutput: (Epeak, fppPeak, fpPeak, Einfl, fppInfl, fpInfl, ((X1, Yspline1, Yfp1),...,(Xn, Ysplinen, Yfpn)) )",          /* module documentation, may be NULL */
+    -1,          /* size of per-interpreter state of the module, or -1 if the module keeps state in global variables. */
+    PyChoochMethods
 };
 
 
@@ -113,14 +124,14 @@ void custom_err_handler(const char* reason, const char* file, int line, int gsl_
 };
 
 
-PyMODINIT_FUNC
-initPyChooch(void)
-{
+// LNLS
+PyMODINIT_FUNC PyInit_PyChooch(void) {
     // install our own error handler for the GSL
-    gsl_set_error_handler(&custom_err_handler);	
+    gsl_set_error_handler(&custom_err_handler); 
 
-    (void) Py_InitModule("PyChooch", PyChoochMethods);
+    return PyModule_Create(&PyChooch);
 }
+
 
 static int my_efswrite(const char *filename, double *x, double *y1, double *y2, int n) {
   int    i;
